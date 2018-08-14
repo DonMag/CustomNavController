@@ -49,7 +49,7 @@ class NavVCB: UIViewController {
 	
 }
 
-class NavVCC: UIViewController {
+class NavVCC: UIViewController, dismissAndPopToRootProtocol {
 	
 	@IBAction func popBackOneTapped(_ sender: Any) {
 		navigationController?.popViewController(animated: true)
@@ -59,4 +59,40 @@ class NavVCC: UIViewController {
 		navigationController?.popToRootViewController(animated: true)
 	}
 	
+	@IBAction func presentTapped(_ sender: Any) {
+		if let vc = storyboard?.instantiateViewController(withIdentifier: "presentMeVC") as? PresentMeViewController {
+			vc.dapDelegate = self
+			present(vc, animated: true, completion: nil)
+		}
+	}
+	
+	func dismissAndPopToRoot(_ animated: Bool) -> Void {
+
+		// this will dismiss the presented VC and then pop to root on the NavVC stack
+		dismiss(animated: animated, completion: {
+			self.navigationController?.popToRootViewController(animated: animated)
+		})
+
+	}
+	
 }
+
+// protocol for the presented VC to "call back" to the presenting VC
+protocol dismissAndPopToRootProtocol {
+	func dismissAndPopToRoot(_ animated: Bool)
+}
+
+class PresentMeViewController: UIViewController {
+	
+	var dapDelegate: dismissAndPopToRootProtocol?
+	
+	@IBAction func dismissTapped(_ sender: Any) {
+		dapDelegate?.dismissAndPopToRoot(false)
+	}
+	
+	@IBAction func dismissAnimTapped(_ sender: Any) {
+		dapDelegate?.dismissAndPopToRoot(true)
+	}
+	
+}
+
