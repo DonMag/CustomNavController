@@ -61,6 +61,7 @@ class NavVCC: UIViewController, dismissAndPopToRootProtocol {
 	
 	@IBAction func presentTapped(_ sender: Any) {
 		if let vc = storyboard?.instantiateViewController(withIdentifier: "presentMeVC") as? PresentMeViewController {
+			// Assign the delegate when instantiating and presenting the VC
 			vc.dapDelegate = self
 			present(vc, animated: true, completion: nil)
 		}
